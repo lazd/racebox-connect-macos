@@ -18,6 +18,8 @@ If the default branch is not `main`, update the workflow's branch filter.
 Preview locally with `python3 -m http.server 8000 --directory docs`, then open
 <http://localhost:8000>. The site has no build step or runtime dependencies.
 All local asset links are relative so they also work under the Pages project path.
+Run `node --test src/website.test.js` to check local assets, navigation targets,
+screenshots, and latest-release download links.
 
 Download buttons use GitHub's permanent latest-release asset URL. Attach the
 build's **`RaceBox Connect.dmg`** (with exactly that name) to each published GitHub
@@ -26,6 +28,7 @@ GitHub will return 404 for the download and latest-release links.
 The app icon and screenshots are stored in [`docs/assets/`](./docs/assets/).
 When updating the UI, replace the screenshots there; avoid including personal
 paths, device identifiers, or sensitive recording locations.
+The current screenshots use sample recordings and redact device identifiers.
 
 ### Build and use the app
 

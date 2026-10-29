@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#15343e" />
     <meta
       name="description"
-      content="A native macOS companion for RaceBox Mini S. Download recordings, capture live telemetry, and explore your tracks. Your data stays on your Mac."
+      content="A native macOS companion for RaceBox Mini S. Download standalone recordings from device memory or capture live telemetry. Does not download Lap Timer session history from the RaceBox Mobile App or its cloud backups."
     />
     <title>RaceBox Connect — Your data. Your Mac.</title>
     <link rel="icon" type="image/png" href="./assets/app-icon.png" />
@@ -42,7 +42,7 @@
           Your race. Your data.<br /><span>On your Mac, not in the cloud.</span>
         </h1>
         <p class="hero-description">
-          Download saved sessions, start standalone recording, and stream live data to your Mac.
+          Start standalone recording, download saved recordings, and stream live data to your Mac.
           <br />No phone or cloud required; your data stays private.
         </p>
         <div class="download-actions">
@@ -72,9 +72,15 @@
         <p class="download-note">
           macOS 14 Sonoma or later · RaceBox Mini S · Free &amp; open source
         </p>
-        <p class="independent-note">
-          An independent project. Not affiliated with or endorsed by RaceBox.
-        </p>
+        <div class="download-details">
+          <p class="compatibility-note">
+            RaceBox Connect downloads standalone recordings stored on your Mini S, not Lap Timer
+            session history from the RaceBox Mobile App or its cloud backups.
+          </p>
+          <p class="independent-note">
+            An independent project. Not affiliated with or endorsed by RaceBox.
+          </p>
+        </div>
         <a
           class="hero-screen screenshot-link"
           href="./assets/dashboard.png"
@@ -82,31 +88,31 @@
         >
           <img
             src="./assets/dashboard.png"
-            width="1120"
-            height="900"
+            width="1600"
+            height="1253"
             alt="RaceBox Connect dashboard with download and live capture controls, telemetry, motion, and device memory"
             fetchpriority="high"
           />
         </a>
-        <div class="hero-caption">
-          <span class="status-dot"></span> Bluetooth to your RaceBox. Straight to your Mac.
-        </div>
       </section>
 
       <section class="features-section" id="features" aria-labelledby="features-title">
         <div class="wrap">
           <div class="section-heading">
             <h2 id="features-title">The data you want.<br />None of the cloud.</h2>
-            <p>Download data directly from your RaceBox, no phone, no login required.</p>
+            <p>
+              Download standalone recordings directly from your RaceBox, no phone, no login
+              required.
+            </p>
           </div>
           <div class="feature-grid">
             <article class="feature-card">
               <span class="feature-symbol" aria-hidden="true">↓</span>
-              <h3>Bring every session home</h3>
+              <h3>Bring standalone sessions home</h3>
               <p>
-                Download stored recordings as JSON or CSV. Sessions are organized by date,
-                recordings you've already downloaded are skipped, and old recordings can be erased
-                automatically or left untouched.
+                Download stored standalone recordings as JSON or CSV. Sessions are organized by
+                date, recordings you've already downloaded are skipped, and old recordings can be
+                erased automatically or left untouched.
               </p>
             </article>
             <article class="feature-card">
@@ -150,10 +156,31 @@
               </p>
             </article>
           </div>
-          <p class="privacy-note">
-            Your recording files stay local. Apple Maps requires an internet connection to load map
-            tiles.
-          </p>
+          <article class="feature-card privacy-card">
+            <span class="feature-symbol" aria-hidden="true">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6l-8-3Z" />
+                <rect x="9" y="10" width="6" height="6" rx="1" />
+                <path d="M10 10V8a2 2 0 0 1 4 0v2" />
+              </svg>
+            </span>
+            <div>
+              <h3>Private by design</h3>
+              <p>
+                Your recording files stay local and are never sent to RaceBox or any third party.
+                Apple Maps requires an internet connection to load map tiles.
+              </p>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -162,8 +189,7 @@
           <h2 id="gallery-title">A little look around.</h2>
           <p>
             A real Mac app, from the first connection to the last corner. Built with SwiftUI and
-            CoreBluetooth.<br />Select any screenshot for a closer look. Recordings use sample data;
-            device identifiers are redacted.
+            CoreBluetooth.
           </p>
         </div>
         <div class="gallery">
@@ -175,9 +201,9 @@
             >
               <img
                 src="./assets/dashboard.png"
-                width="1120"
-                height="900"
-                alt="Dashboard view showing the device connection, recording controls, and live instruments"
+                width="1600"
+                height="1253"
+                alt="Connected RaceBox dashboard with a real 3D fix, 14 satellites, recording controls, and live instruments"
                 loading="lazy"
               />
             </a>
@@ -186,7 +212,7 @@
               <div>
                 <h3>Dashboard</h3>
                 <p>
-                  View fix status and sensor data, download sessions, kick off standalone
+                  View fix status and sensor data, download standalone sessions, kick off standalone
                   recordings, and more.
                 </p>
               </div>
@@ -200,8 +226,8 @@
             >
               <img
                 src="./assets/recordings.png"
-                width="1120"
-                height="900"
+                width="1600"
+                height="1253"
                 alt="Recordings view listing saved sessions with dates, point counts, durations, and completion status"
                 loading="lazy"
               />
@@ -210,7 +236,10 @@
               <span class="view-number">02</span>
               <div>
                 <h3>Recordings</h3>
-                <p>View your saved sessions with quick access to the original files.</p>
+                <p>
+                  View your saved standalone sessions and live captures with quick access to the
+                  original files.
+                </p>
               </div>
             </figcaption>
           </figure>
@@ -222,9 +251,9 @@
             >
               <img
                 src="./assets/session.png"
-                width="1120"
-                height="900"
-                alt="Session detail with a sample Apple Maps track and speed and G-force statistics"
+                width="1600"
+                height="1253"
+                alt="Synthetic Sonoma Raceway laps following the road course on Apple Maps, with speed and G-force statistics"
                 loading="lazy"
               />
             </a>
@@ -232,12 +261,29 @@
               <span class="view-number">03</span>
               <div>
                 <h3>Session detail</h3>
-                <p>
-                  Follow your track and dig into speed, acceleration, braking, and cornering.
-                  <a href="./assets/charts.png"
-                    >See speed &amp; G-force charts <span aria-hidden="true">↗</span></a
-                  >
-                </p>
+                <p>Follow your track and dig into speed, acceleration, braking, and cornering.</p>
+              </div>
+            </figcaption>
+          </figure>
+          <figure>
+            <a
+              class="screenshot-link"
+              href="./assets/charts.png"
+              aria-label="Open full-size speed and G-force charts screenshot"
+            >
+              <img
+                src="./assets/charts.png"
+                width="1600"
+                height="1253"
+                alt="Speed and G-force charts showing acceleration and braking on X and cornering force on Y over time"
+                loading="lazy"
+              />
+            </a>
+            <figcaption>
+              <span class="view-number">04</span>
+              <div>
+                <h3>Speed &amp; G-force</h3>
+                <p>See acceleration, braking, and cornering forces alongside speed over time.</p>
               </div>
             </figcaption>
           </figure>
@@ -256,7 +302,7 @@
               />
             </a>
             <figcaption>
-              <span class="view-number">04</span>
+              <span class="view-number">05</span>
               <div>
                 <h3>Preferences</h3>
                 <p>Set units, output format, and configure automatic storage management.</p>
@@ -273,8 +319,10 @@
             <h2 id="start-title">Keep your data at home.</h2>
             <p>
               Download the DMG, drag RaceBox Connect to Applications, and allow Bluetooth access.
-              Power on your Mini S and close any other apps connected to it. Your next adventure
-              awaits.
+              Power on your Mini S and close any other apps connected to it. Use standalone
+              recording to save sessions in device memory, or capture live telemetry on your Mac.
+              <br />RaceBox Connect does not download Lap Timer session history from the RaceBox
+              Mobile App or its cloud backups.
             </p>
           </div>
           <a
@@ -309,6 +357,10 @@
         RaceBox Connect is an independent, community-developed app. It is not affiliated with,
         sponsored by, or endorsed by RaceBox. RaceBox and related product names belong to their
         respective owners.
+      </p>
+      <p class="disclaimer">
+        Track geometry:
+        <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors (ODbL)</a>.
       </p>
     </footer>
   </body>

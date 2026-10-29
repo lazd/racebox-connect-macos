@@ -30,7 +30,7 @@ test('website navigation targets exist and screenshots have alt text', () => {
         assert.match(image, /\balt="[^"]*"/);
     }
     for (const view of ['dashboard', 'recordings', 'session', 'preferences', 'charts']) {
-        assert.ok(html.includes(`./assets/${view}.png`), `Missing ${view} screenshot`);
+        assert.ok(html.includes(`src="./assets/${view}.png"`), `Missing ${view} screenshot thumbnail`);
     }
 });
 

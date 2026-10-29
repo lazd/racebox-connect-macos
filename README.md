@@ -28,7 +28,12 @@ GitHub will return 404 for the download and latest-release links.
 The app icon and screenshots are stored in [`docs/assets/`](./docs/assets/).
 When updating the UI, replace the screenshots there; avoid including personal
 paths, device identifiers, or sensitive recording locations.
-The current screenshots use sample recordings and redact device identifiers.
+The dashboard screenshot shows a real connected device with a valid 3D fix.
+Recording screenshots use synthetic Sonoma Raceway laps, following mapped
+road-course geometry with speed, acceleration/braking, and cornering data.
+Track geometry is from [OpenStreetMap contributors](https://www.openstreetmap.org/copyright)
+under the ODbL. Device identifiers, personal locations, and home paths are
+redacted or anonymized.
 
 ### Build and use the app
 

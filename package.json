@@ -1,0 +1,18 @@
+{
+  "name": "racebox-extract",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "Larry Davis <lazdnet@gmail.com",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "scripts": {
+    "download": "node src/index.js",
+    "live": "node src/live.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@abandonware/noble": "^1.9.2-26"
+  }
+}

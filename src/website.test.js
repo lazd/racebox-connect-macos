@@ -35,14 +35,14 @@ test('website navigation targets exist and screenshots have alt text', () => {
 });
 
 test('download buttons target the latest release DMG produced by the native build', () => {
-    const buttons = [...html.matchAll(/<a class="button primary" href="([^"]+)"/g)];
+    const buttons = [...html.matchAll(/<a\s+class="button primary"\s+href="([^"]+)"/g)];
     assert.equal(buttons.length, 2);
     for (const [, href] of buttons) {
         const url = new URL(href);
         assert.equal(url.origin, 'https://github.com');
         assert.equal(decodeURIComponent(url.pathname),
-            '/lazd/racebox-connect-macos/releases/latest/download/RaceBox Connect.dmg');
+            '/lazd/racebox-connect-macos/releases/latest/download/RaceBoxConnect.dmg');
     }
     const build = fs.readFileSync(path.resolve(__dirname, '../macos/scripts/build.sh'), 'utf8');
-    assert.ok(build.includes('$DIST/RaceBox Connect.dmg'), 'Release asset must match the build output');
+    assert.ok(build.includes('$DIST/RaceBoxConnect.dmg'), 'Release asset must match the build output');
 });

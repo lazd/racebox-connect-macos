@@ -31,5 +31,5 @@ trap 'rm -rf "$STAGING"' EXIT
 ditto "$APP" "$STAGING/RaceBox Connect.app"
 ln -s /Applications "$STAGING/Applications"
 hdiutil create -volname "RaceBox Connect" -srcfolder "$STAGING" \
-    -ov -format UDZO "$DIST/RaceBox Connect.dmg"
-printf '\nBuilt %s\n' "$DIST/RaceBox Connect.dmg"
+    -ov -format UDZO "$DIST/RaceBoxConnect.dmg"
+printf '\nBuilt %s\n' "$DIST/RaceBoxConnect.dmg"

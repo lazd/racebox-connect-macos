@@ -22,7 +22,7 @@ Run `node --test src/website.test.js` to check local assets, navigation targets,
 screenshots, and latest-release download links.
 
 Download buttons use GitHub's permanent latest-release asset URL. Attach the
-build's **`RaceBox Connect.dmg`** (with exactly that name) to each published GitHub
+build's **`RaceBoxConnect.dmg`** (with exactly that name) to each published GitHub
 release; no website edit is needed for new versions. Before the first release,
 GitHub will return 404 for the download and latest-release links.
 The app icon and screenshots are stored in [`docs/assets/`](./docs/assets/).
@@ -34,7 +34,7 @@ The current screenshots use sample recordings and redact device identifiers.
 
 ```sh
 npm run build:mac
-open "dist/RaceBox Connect.dmg"
+open "dist/RaceBoxConnect.dmg"
 ```
 
 Drag **RaceBox Connect** to Applications, launch it, and allow Bluetooth access.
@@ -185,7 +185,7 @@ another installation. Run `npm run test:mac` for native framing, schema, CSV,
 session-boundary, interruption, file-error, deletion-eligibility, saved-file
 loading, chart downsampling, memory-duration, and standalone-command tests.
 
-The build produces `dist/RaceBox Connect.app` and `dist/RaceBox Connect.dmg`
+The build produces `dist/RaceBox Connect.app` and `dist/RaceBoxConnect.dmg`
 for the build Mac's CPU architecture, with a natively drawn multi-resolution
 icon and an Applications shortcut in the DMG. The app is locally ad-hoc signed,
 not Developer ID signed or notarized; public distribution requires your own

@@ -9,8 +9,11 @@
   "main": "src/index.js",
   "scripts": {
     "download": "node src/index.js",
+    "erase": "node src/erase.js",
     "live": "node src/live.js",
-    "test": "node --test"
+    "test": "node --test",
+    "test:mac": "bash macos/scripts/test.sh",
+    "build:mac": "bash macos/scripts/build.sh"
   },
   "dependencies": {
     "@abandonware/noble": "^1.9.2-26"

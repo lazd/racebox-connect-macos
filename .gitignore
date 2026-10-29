@@ -2,3 +2,6 @@ racebox_sessions/
 racebox_live/
 node_modules/
 .DS_Store
+macos/.build/
+macos/.build-tests/
+dist/

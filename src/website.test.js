@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { test } = require('node:test');
+const vm = require('node:vm');
 
 const directory = path.resolve(__dirname, '../docs');
 const html = fs.readFileSync(path.join(directory, 'index.html'), 'utf8');
@@ -45,4 +46,48 @@ test('download buttons target the latest release DMG produced by the native buil
     }
     const build = fs.readFileSync(path.resolve(__dirname, '../macos/scripts/build.sh'), 'utf8');
     assert.ok(build.includes('$DIST/RaceBoxConnect.dmg'), 'Release asset must match the build output');
+});
+
+test('both download buttons track file downloads without blocking navigation', () => {
+    const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+    const links = [...html.matchAll(/<a\s+class="button primary"\s+href="([^"]+)"/g)]
+        .map(([, href]) => ({
+            href,
+            textContent: '\n Download   for macOS \n',
+            addEventListener(type, handler) {
+                assert.equal(type, 'click');
+                this.click = handler;
+            },
+        }));
+    const events = [];
+    const window = { gtag: (...args) => events.push(args) };
+    vm.runInNewContext(scripts.at(-1)[1], {
+        window,
+        document: {
+            querySelectorAll(selector) {
+                assert.equal(selector, 'a.button.primary');
+                return links;
+            },
+        },
+    });
+    assert.equal(links.length, 2);
+    for (const link of links) {
+        link.click({ currentTarget: link });
+        const [command, name, parameters] = events.at(-1);
+        assert.equal(command, 'event');
+        assert.equal(name, 'file_download');
+        assert.deepEqual({ ...parameters }, {
+            file_name: 'RaceBoxConnect.dmg',
+            file_extension: 'dmg',
+            link_url: link.href,
+            link_text: 'Download for macOS',
+            transport_type: 'beacon',
+        });
+    }
+    assert.equal(events.length, 2);
+    delete window.gtag;
+    for (const link of links) {
+        assert.doesNotThrow(() => link.click({ currentTarget: link }));
+    }
+    assert.equal(events.length, 2);
 });

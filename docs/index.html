@@ -374,5 +374,21 @@
         <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors (ODbL)</a>.
       </p>
     </footer>
+    <script>
+      document.querySelectorAll("a.button.primary").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const link = event.currentTarget;
+          if (typeof window.gtag !== "function") return;
+
+          window.gtag("event", "file_download", {
+            file_name: "RaceBoxConnect.dmg",
+            file_extension: "dmg",
+            link_url: link.href,
+            link_text: link.textContent.trim().replace(/\s+/g, " "),
+            transport_type: "beacon",
+          });
+        });
+      });
+    </script>
   </body>
 </html>

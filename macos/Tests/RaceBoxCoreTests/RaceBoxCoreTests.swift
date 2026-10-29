@@ -34,6 +34,10 @@ final class RaceBoxCoreTests: XCTestCase {
         try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any])
     }
 
+    private func canonicalURLs(_ urls: [URL]) -> [URL] {
+        urls.map { $0.resolvingSymlinksInPath().standardizedFileURL }
+    }
+
     func testManufacturerCommands() {
         XCTAssertEqual(Packet(id: 0x23).data, Data(bytes("b562ff2300002265")))
         XCTAssertEqual(Packet(id: 0x24).data, Data(bytes("b562ff2400002368")))
@@ -253,7 +257,7 @@ final class RaceBoxCoreTests: XCTestCase {
             for _ in 0..<2 {
                 let repeated = try completedDownload(directory: directory, format: format)
                 XCTAssertTrue(repeated.files.isEmpty)
-                XCTAssertEqual(repeated.skippedRecordings.map(\.url), [url])
+                XCTAssertEqual(canonicalURLs(repeated.skippedRecordings.map(\.url)), canonicalURLs([url]))
                 XCTAssertEqual(repeated.received, 1)
                 XCTAssertEqual(repeated.savedPointCount, 0)
                 XCTAssertTrue(repeated.safeToErase)
@@ -279,7 +283,7 @@ final class RaceBoxCoreTests: XCTestCase {
         try FileManager.default.removeItem(at: originalURL)
         let repeated = try completedDownload(directory: directory, format: .json)
         XCTAssertTrue(repeated.files.isEmpty)
-        XCTAssertEqual(repeated.skippedRecordings.map(\.url), [legacyURL])
+        XCTAssertEqual(canonicalURLs(repeated.skippedRecordings.map(\.url)), canonicalURLs([legacyURL]))
         XCTAssertEqual(try Data(contentsOf: legacyURL), data)
     }
 
@@ -343,11 +347,11 @@ final class RaceBoxCoreTests: XCTestCase {
         XCTAssertEqual(mixed.received, 2)
         XCTAssertEqual(mixed.savedPointCount, 1)
         XCTAssertEqual(mixed.files.count, 1)
-        XCTAssertEqual(mixed.skippedRecordings.map(\.url), first.files)
+        XCTAssertEqual(canonicalURLs(mixed.skippedRecordings.map(\.url)), canonicalURLs(first.files))
         XCTAssertTrue(mixed.safeToErase)
     }
 
-    func testDuplicateCheckFailureIsExplicitAndNeverAuthorizesErase() throws {
+    func testUnreadableBackupsAreReportedWithoutBlockingNewSavesOrAuthorizingErase() throws {
         for format in ExportFormat.allCases {
             let directory = try temporaryDirectory()
             let first = try completedDownload(directory: directory, format: format)
@@ -359,8 +363,11 @@ final class RaceBoxCoreTests: XCTestCase {
             try next.receive(count(1), invalidFrames: 0)
             try next.receive(packet(0x21), invalidFrames: 0)
             let newURL = try XCTUnwrap(next.activeFileURL)
-            XCTAssertThrowsError(try next.receive(Packet(id: 2, payload: [0xff, 0x23]), invalidFrames: 0))
+            XCTAssertTrue(try next.receive(Packet(id: 2, payload: [0xff, 0x23]), invalidFrames: 0))
             XCTAssertFalse(next.safeToErase)
+            XCTAssertEqual(next.duplicateCheckIssues.count, 1)
+            XCTAssertEqual(canonicalURLs(next.duplicateCheckIssues.map(\.url)), canonicalURLs([originalURL]))
+            XCTAssertEqual(next.files, [newURL])
             XCTAssertEqual(try Data(contentsOf: brokenURL), brokenData)
             XCTAssertTrue(FileManager.default.fileExists(atPath: newURL.path))
         }

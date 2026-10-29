@@ -307,10 +307,8 @@ private struct RecordingVisualization: View {
                 summaryMetric("Max braking (−X)", value: forceLabel(statistics.brakingG), color: .purple)
                 summaryMetric("Peak cornering (Y)", value: forceLabel(statistics.cornering?.magnitude),
                               color: .green, detail: directionalPeaks(statistics.cornering, axis: "Y"))
-                summaryMetric("Peak vertical (Z)", value: forceLabel(statistics.vertical?.magnitude),
-                              color: .blue, detail: directionalPeaks(statistics.vertical, axis: "Z"))
             }
-            Text("Acceleration and braking are separate X-axis peaks. Cornering and vertical show the largest magnitude, with both directions below. Raw Z includes gravity.")
+            Text("Acceleration and braking are separate X-axis peaks. Cornering shows the largest magnitude, with both directions below.")
                 .font(.caption).foregroundStyle(.secondary)
         }
     }

@@ -390,15 +390,19 @@ private struct DownloadCompleteView: View {
     @EnvironmentObject private var client: RaceBoxClient
     @Environment(\.dismiss) private var dismiss
 
+    private var hasWarnings: Bool {
+        confirmation.hasIncompleteRecordings || !confirmation.duplicateCheckIssues.isEmpty
+    }
+
     var body: some View {
         VStack(spacing: 20) {
-            Image(systemName: confirmation.hasIncompleteRecordings
+            Image(systemName: hasWarnings
                   ? "exclamationmark.circle.fill" : "checkmark.circle.fill")
                 .font(.system(size: 48))
-                .foregroundStyle(confirmation.hasIncompleteRecordings ? apricot : seafoam)
+                .foregroundStyle(hasWarnings ? apricot : seafoam)
             Text(confirmation.files.isEmpty && !confirmation.skippedFiles.isEmpty
                  ? "Already Downloaded"
-                 : confirmation.hasIncompleteRecordings ? "Download Finished" : "Download Complete")
+                 : hasWarnings ? "Download Finished" : "Download Complete")
                 .font(.title2.bold())
             Text("\(confirmation.files.count.formatted()) recordings • \(confirmation.pointCount.formatted()) points saved")
                 .foregroundStyle(.secondary)
@@ -422,7 +426,16 @@ private struct DownloadCompleteView: View {
                 Text("Some recordings are incomplete because standalone recording was still active. The received data is saved; download again after recording stops.")
                     .font(.callout).foregroundStyle(apricot)
             }
-            if confirmation.deletionRequested {
+            if !confirmation.duplicateCheckIssues.isEmpty {
+                Text("\(confirmation.duplicateCheckIssues.count.formatted()) existing files could not be checked for duplicates. New recordings were saved and existing files were left untouched. Automatic memory clearing was disabled.")
+                    .font(.callout).foregroundStyle(apricot)
+                ForEach(Array(confirmation.duplicateCheckIssues.prefix(2))) { issue in
+                    Text("\(issue.url.lastPathComponent): \(issue.message)")
+                        .font(.caption).foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+                }
+            }
+            if confirmation.deletionRequested && confirmation.duplicateCheckIssues.isEmpty {
                 Text("Automatic memory clearing is a separate step. Keep your RaceBox powered on until the dashboard confirms memory is cleared.")
                     .font(.caption).foregroundStyle(.secondary)
             }

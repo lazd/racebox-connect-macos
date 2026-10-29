@@ -636,8 +636,9 @@ final class RaceBoxClient: NSObject, ObservableObject, CBCentralManagerDelegate,
                 message = "Saved \(download.savedPointCount.formatted()) new points across \(download.files.count) recordings to \(directory.path). \(download.skippedRecordings.count) already downloaded."
                 downloadConfirmation = DownloadConfirmation(
                     directory: directory, files: download.files,
-                    skippedFiles: download.skippedRecordings.map(\.url), pointCount: download.savedPointCount,
+                    skippedFiles: download.skippedRecordings.map(\.url),
                     duplicateCheckIssues: download.duplicateCheckIssues,
+                    pointCount: download.savedPointCount,
                     hasIncompleteRecordings: download.recordings.contains { !$0.complete },
                     deletionRequested: deleteWhenDone
                 )

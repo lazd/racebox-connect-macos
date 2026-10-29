@@ -43,9 +43,9 @@ device during history download and erase.
   and the corresponding track position. A separate speed-over-time chart shares
   the time selection and uses the selected mph/km/h display units. Session
   summaries show max speed, peak acceleration (+X), peak braking (−X, reported
-  as a positive magnitude), peak cornering (Y), and peak vertical force (Z).
-  Y/Z also show separate positive- and negative-direction peaks; raw Z includes
-  gravity. Statistics are calculated from all saved samples, not the reduced
+  as a positive magnitude), and peak cornering (Y).
+  Y also shows separate positive- and negative-direction peaks.
+  Statistics are calculated from all saved samples, not the reduced
   chart data, and acceleration/braking are stored separately in the loaded
   session model. Export file formats are unchanged.
   Long charts retain extrema from speed and all three G-force axes when reducing
@@ -107,6 +107,8 @@ format creates that format's export. The device only supports full-memory
 transfers, so duplicate recordings still travel over Bluetooth. Automatic deletion
 remains available after a verified transfer when all data is saved or already
 present locally; duplicate-check or cleanup failures prevent erasing.
+Unreadable existing exports are reported and left untouched without blocking new
+saves.
 JSON has the same point fields and outer
 metadata as the respective Node history/live implementation. Files are written
 incrementally; JSON becomes valid when finalized. Interrupted captures and the

@@ -251,7 +251,10 @@ test("refreshes the emoji dashboard in place while acquiring a fix without writi
   capture.receive(frame());
   assert.equal(capture.terminalOutput.length, 4);
   assert.match(capture.terminalOutput[3], /3D fix · Recording/);
-  assert.match(capture.terminalOutput[3], /Horizontal acc\.\s+0\.92 m\s+\| Vertical acc\.\s+1\.84 m/);
+  assert.match(
+    capture.terminalOutput[3],
+    /Horizontal acc\.\s+0\.92 m\s+\| Vertical acc\.\s+1\.84 m/,
+  );
   assert.match(capture.terminalOutput[3], /PDOP\s+3\.00/);
   capture.receive(frameWithFix(3, 0));
   assert.match(capture.terminalOutput.at(-1), /Fix lost · Logging paused/);
@@ -298,6 +301,7 @@ test("keeps numeric precision and column positions stable across magnitudes, sig
   const capture = createCapture(undefined, true);
   capture.fakeProcess.stdout.columns = 120;
   const displays = [];
+  const clocks = [];
   for (const large of [false, true]) {
     const payload = Buffer.from(frame().subarray(6, -2));
     payload[23] = large ? 100 : 1;
@@ -317,11 +321,19 @@ test("keeps numeric precision and column positions stable across magnitudes, sig
       capture.terminalOutput
         .at(-1)
         .split("\n")
+        .map((line) => line.replace(/^\S+ {2}/u, ""))
         .filter((line) =>
           /^(Satellites used|Horizontal acc\.|Speed |Heading |Latitude |Altitude MSL|G-force [XYZ]|Battery |Points saved)/.test(
             line,
           ),
         ),
+    );
+    clocks.push(
+      capture.terminalOutput
+        .at(-1)
+        .split("\n")
+        .map((line) => line.replace(/^\S+ {2}/u, ""))
+        .find((line) => line.startsWith("UTC")),
     );
     capture.advanceTime(250);
   }
@@ -330,10 +342,13 @@ test("keeps numeric precision and column positions stable across magnitudes, sig
   assert.equal(large.length, 11);
   assert.match(small[4], /Latitude\s+0\.1234567 °\s+\| Longitude\s+0\.1234567/);
   assert.match(large[4], /Latitude\s+-87\.6543210 °\s+\| Longitude\s+-123\.4567890/);
+  assert.equal(clocks[0].length, clocks[1].length);
+  assert.equal(clocks[0].indexOf("|"), small[0].indexOf("|"));
+  assert.equal(clocks[1].indexOf("|"), large[0].indexOf("|"));
   assert.match(small[6], /G-force X\s+0\.001 g\s+\| Roll rate\s+0\.01/);
   assert.match(large[6], /G-force X\s+-32\.768 g\s+\| Roll rate\s+-327\.68/);
   for (let row = 0; row < small.length; row++) {
-    assert.equal(small[row].length, 75, `row ${row} table width`);
+    assert.equal(small[row].length, 71, `row ${row} table width`);
     assert.equal(small[row].length, large[row].length, `row ${row} width`);
     assert.deepEqual(
       [...small[row].matchAll(/[|±%°]/g)].map((match) => match.index),
@@ -345,10 +360,14 @@ test("keeps numeric precision and column positions stable across magnitudes, sig
   const waiting = capture.terminalOutput
     .at(-1)
     .split("\n")
+    .map((line) => line.replace(/^\S+ {2}/u, ""))
     .filter((line) => /^(Horizontal acc\.|Speed |Heading |Latitude |Altitude MSL)/.test(line));
   assert.equal(waiting.length, 5);
+  const validRows = large.filter((line) =>
+    /^(Horizontal acc\.|Speed |Heading |Latitude |Altitude MSL)/.test(line),
+  );
   for (let row = 0; row < waiting.length; row++) {
-    assert.equal(waiting[row].length, large[row + 1].length, `no-fix row ${row} width`);
+    assert.equal(waiting[row].length, validRows[row].length, `no-fix row ${row} width`);
   }
   capture.stop();
   assert.equal(capture.capture().points[0].gForceX, 0.001);
@@ -363,8 +382,17 @@ test("fits the complete table and footer in an 80 by 24 terminal", () => {
   const lines = display.split("\n");
   assert.equal(lines.length, 22);
   assert.match(display, /Measurement\s+Value Unit\s+\| Measurement\s+Value Unit/);
+  assert.match(display, /🌟  Satellites used/);
+  assert.match(display, /🎯  Horizontal acc\./);
+  assert.match(display, /💨  Speed/);
+  assert.match(display, /🧭  Heading/);
+  assert.match(display, /🌍  Latitude\s+42\.6719035 °\s+\| Longitude\s+23\.2887238 °/);
+  assert.match(display, /⛰️  Altitude MSL/);
+  assert.match(display, /🫧  G-force X/);
+  assert.match(display, /🔋  Battery/);
+  assert.match(display, /💾  Points saved/);
   assert.match(display, /Points saved\s+1\s+\| Rejected frames\s+0/);
-  assert.match(display, /UTC 2022-01-10 08:51:08/);
+  assert.match(display, /UTC\s+2022-01-10 08:51:08 \| Time accuracy\s+25 ns/);
   assert.match(lines.at(-1), /Ctrl\+C to finish recording/);
   assert.ok(display.endsWith("\x1b[21A\r"));
   capture.stop();

@@ -36,35 +36,66 @@ function renderStatus(point, fixValid, force = false) {
   const now = Date.now();
   if (!force && now - lastStatusAt < 250) return;
   lastStatusAt = now;
-  const numeric = (number, digits, valid = true) => valid ? number.toFixed(digits) : "--";
+  const numeric = (number, digits, valid = true) => (valid ? number.toFixed(digits) : "--");
   const value = (number, digits = 2) => numeric(number, digits, fixValid);
   const cell = (label, reading, unit = "") =>
-    `${label.padEnd(16)} ${String(reading).padStart(13)} ${unit.padEnd(5)}`;
-  const row = (left, right) => `${cell(...left)} | ${cell(...right)}`;
+    `${label.padEnd(15)} ${String(reading).padStart(13)} ${unit.padEnd(4)}`;
+  const row = (emoji, left, right) => `${emoji}  ${cell(...left)} | ${cell(...right)}`;
   const count = (number) => number.toLocaleString("en-US");
   const pad = (number) => String(number).padStart(2, "0");
   const utc = point.utcValid
     ? `${point.year}-${pad(point.month)}-${pad(point.day)} ${pad(point.hour)}:${pad(point.minute)}:${pad(point.second)}`
-    : "Waiting for valid UTC time";
+    : "Waiting for UTC";
   const lines = [
     "\n🎥 RaceBox Mini S · Live Capture\n",
     `🛰️  ${fixValid ? "3D fix · Recording" : pointCount ? "Fix lost · Logging paused" : "Acquiring fix · Waiting to record"}`,
     "",
-    row(["Measurement", "Value", "Unit"], ["Measurement", "Value", "Unit"]),
-    `${"-".repeat(36)}-+-${"-".repeat(36)}`,
-    row(["Satellites used", point.satellites], ["PDOP", value(point.pdop)]),
-    row(["Horizontal acc.", value(point.horizontalAccuracyM), "m"], ["Vertical acc.", value(point.verticalAccuracyM), "m"]),
-    row(["Speed", value(point.speedKmh, 1), "km/h"], ["Speed accuracy", value(point.speedAccuracyKmh, 1), "km/h"]),
-    row(["Heading", value(point.headingDeg, 1), "°"], ["Heading accuracy", value(point.headingAccuracyDeg, 1), "°"]),
-    row(["Latitude", value(point.latitude, 7), "°"], ["Longitude", value(point.longitude, 7), "°"]),
-    row(["Altitude MSL", value(point.altMslM, 1), "m"], ["Altitude WGS84", value(point.altWgsM, 1), "m"]),
-    row(["G-force X", numeric(point.gForceX, 3), "g"], ["Roll rate", numeric(point.rollRate, 2), "°/s"]),
-    row(["G-force Y", numeric(point.gForceY, 3), "g"], ["Pitch rate", numeric(point.pitchRate, 2), "°/s"]),
-    row(["G-force Z", numeric(point.gForceZ, 3), "g"], ["Yaw rate", numeric(point.yawRate, 2), "°/s"]),
-    row(["Battery", point.batteryPercent, "%"], ["Charging", point.charging ? "Yes" : "No"]),
-    row(["Points saved", count(pointCount)], ["Rejected frames", count(invalidFrames)]),
-    "",
-    `🕰️  UTC ${utc.padEnd(25)} | Time accuracy ${numeric(point.timeAccuracyNs, 0, point.utcValid).padStart(10)} ns`,
+    `    ${cell("Measurement", "Value", "Unit")} | ${cell("Measurement", "Value", "Unit")}`,
+    `    ${"-".repeat(34)}-+-${"-".repeat(34)}`,
+    row("🌟", ["Satellites used", point.satellites], ["PDOP", value(point.pdop)]),
+    row(
+      "🎯",
+      ["Horizontal acc.", value(point.horizontalAccuracyM), "m"],
+      ["Vertical acc.", value(point.verticalAccuracyM), "m"],
+    ),
+    row(
+      "💨",
+      ["Speed", value(point.speedKmh, 1), "km/h"],
+      ["Speed accuracy", value(point.speedAccuracyKmh, 1), "km/h"],
+    ),
+    row(
+      "🧭",
+      ["Heading", value(point.headingDeg, 1), "°"],
+      ["Heading acc.", value(point.headingAccuracyDeg, 1), "°"],
+    ),
+    row(
+      "🌍",
+      ["Latitude", value(point.latitude, 7), "°"],
+      ["Longitude", value(point.longitude, 7), "°"],
+    ),
+    row(
+      "⛰️ ",
+      ["Altitude MSL", value(point.altMslM, 1), "m"],
+      ["Altitude WGS84", value(point.altWgsM, 1), "m"],
+    ),
+    row(
+      "🫧",
+      ["G-force X", numeric(point.gForceX, 3), "g"],
+      ["Roll rate", numeric(point.rollRate, 2), "°/s"],
+    ),
+    row(
+      "🫧",
+      ["G-force Y", numeric(point.gForceY, 3), "g"],
+      ["Pitch rate", numeric(point.pitchRate, 2), "°/s"],
+    ),
+    row(
+      "🫧",
+      ["G-force Z", numeric(point.gForceZ, 3), "g"],
+      ["Yaw rate", numeric(point.yawRate, 2), "°/s"],
+    ),
+    row("🔋", ["Battery", point.batteryPercent, "%"], ["Charging", point.charging ? "Yes" : "No"]),
+    row("💾", ["Points saved", count(pointCount)], ["Rejected frames", count(invalidFrames)]),
+    `🕰️   ${"UTC".padEnd(14)} ${utc.padStart(19)} | ${cell("Time accuracy", numeric(point.timeAccuracyNs, 0, point.utcValid), "ns")}`,
     "\n🎀 Ctrl+C to finish recording",
   ];
   const width = Math.max(0, (process.stdout.columns || 80) - 4);

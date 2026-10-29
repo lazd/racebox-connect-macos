@@ -6,6 +6,29 @@ A fully native SwiftUI + CoreBluetooth app for RaceBox Mini S. No Node runtime,
 JavaScript bridge, or third-party Swift dependencies are used by the app.
 Requires macOS 14 or later.
 
+### Website and GitHub Pages
+
+The static website lives in [`docs/`](./docs/) and is deployed by
+the [Pages workflow](./.github/workflows/pages.yml). After pushing this repository
+to `lazd/racebox-connect-macos`, select **Settings → Pages → Build and deployment →
+Source → GitHub Actions**. Push website changes to `main`, or run the workflow
+manually, to publish at <https://lazd.github.io/racebox-connect-macos/>.
+If the default branch is not `main`, update the workflow's branch filter.
+
+Preview locally with `python3 -m http.server 8000 --directory docs`, then open
+<http://localhost:8000>. The site has no build step or runtime dependencies.
+All local asset links are relative so they also work under the Pages project path.
+
+Download buttons use GitHub's permanent latest-release asset URL. Attach the
+build's **`RaceBox Connect.dmg`** (with exactly that name) to each published GitHub
+release; no website edit is needed for new versions. Before the first release,
+GitHub will return 404 for the download and latest-release links.
+The app icon and screenshots are stored in [`docs/assets/`](./docs/assets/).
+When updating the UI, replace the screenshots there; avoid including personal
+paths, device identifiers, or sensitive recording locations.
+
+### Build and use the app
+
 ```sh
 npm run build:mac
 open "dist/RaceBox Connect.dmg"

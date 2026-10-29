@@ -163,6 +163,21 @@ bash macos/scripts/build.sh
 bash macos/scripts/test.sh
 ```
 
+For automatic rebuilds, run `npm run watch:mac`, or choose **Tasks: Run Task →
+Watch macOS app** in VS Code. The task builds and opens the app immediately,
+then watches native sources, package configuration, `Info.plist`, and the build
+and icon scripts. Saves are debounced and builds run one at a time; changes
+during a build trigger another rebuild. Generated files and website edits do
+not trigger native builds.
+
+Each rebuild gracefully quits the app, builds/signs the app bundle without
+recreating the DMG, and reopens it. If a capture, download, or erase is active,
+the normal quit confirmation still applies; choose **Keep Open** to cancel.
+Build or quit failures are shown in the terminal and retried on the next save.
+Stop watching with Control-C or **Tasks: Terminate Task**; this leaves an
+already-open app running. Use `npm run build:mac -- --app-only` for a one-off
+app-only build, or `npm run build:mac` to also create the DMG.
+
 Building requires Swift 5.10 or later (Xcode 15.3+ or recent Command Line Tools).
 Tests require full Xcode for XCTest. The test script selects the standard Xcode
 installation if Command Line Tools are selected; `DEVELOPER_DIR` can select
@@ -175,7 +190,10 @@ for the build Mac's CPU architecture, with a natively drawn multi-resolution
 icon and an Applications shortcut in the DMG. The app is locally ad-hoc signed,
 not Developer ID signed or notarized; public distribution requires your own
 Apple signing/notarization workflow. The in-app mascot uses the same bow-and-Wi-Fi
-icon as the application. Device recording settings only change when explicitly
+icon as the application, loaded directly from the bundled artwork rather than
+the system icon cache. Launching also sets the Dock icon from that artwork.
+After rebuilding, quit any running copy and open `dist/RaceBox Connect.app` to
+see the updated icon. Device recording settings only change when explicitly
 starting/stopping standalone recording; rate and filter settings are preserved.
 Hardware-free tests do not replace verification on a physical Mini S, especially
 for history download, standalone start/stop, protected-memory access, and

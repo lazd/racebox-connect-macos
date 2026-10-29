@@ -185,12 +185,12 @@ final class RaceBoxClient: NSObject, ObservableObject, CBCentralManagerDelegate,
                     return
                 }
                 self.connectionStatus = self.devices.isEmpty
-                    ? "No Mini S found. Power it on and click Find RaceBox to try again."
+                    ? "No Mini S found. Click Find RaceBox to try again."
                     : "No valid signal readings. Choose a device in the sidebar."
                 return
             }
             self.connectionStatus = self.devices.isEmpty
-                ? "No Mini S found. Power it on and close other RaceBox apps."
+                ? "No Mini S found. Close other RaceBox apps."
                 : "Choose a device in the sidebar."
         }
     }

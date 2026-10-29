@@ -13,7 +13,8 @@
     "live": "node src/live.js",
     "test": "node --test",
     "test:mac": "bash macos/scripts/test.sh",
-    "build:mac": "bash macos/scripts/build.sh"
+    "build:mac": "bash macos/scripts/build.sh",
+    "watch:mac": "node macos/scripts/watch.js"
   },
   "dependencies": {
     "@abandonware/noble": "^1.9.2-26"

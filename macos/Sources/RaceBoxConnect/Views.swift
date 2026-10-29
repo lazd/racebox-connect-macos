@@ -5,9 +5,20 @@ import SwiftUI
 private let seafoam = Color(red: 0.18, green: 0.70, blue: 0.60)
 private let apricot = Color(red: 0.96, green: 0.57, blue: 0.33)
 
+enum AppArtwork {
+    static let icon: NSImage = {
+        guard let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleIconFile") as? String,
+              let url = Bundle.main.url(forResource: name, withExtension: "icns"),
+              let image = NSImage(contentsOf: url) else {
+            fatalError("Missing bundled app icon. Build and launch the app with macos/scripts/build.sh.")
+        }
+        return image
+    }()
+}
+
 struct RaceBoxMascot: View {
     var body: some View {
-        Image(nsImage: NSApplication.shared.applicationIconImage)
+        Image(nsImage: AppArtwork.icon)
             .resizable()
             .interpolation(.high)
             .scaledToFit()
@@ -75,10 +86,11 @@ struct DashboardView: View {
                                     Spacer()
                                     Image(systemName: "chevron.right").font(.caption)
                                 }
+                                .padding(10)
+                                .background(seafoam.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+                                .contentShape(RoundedRectangle(cornerRadius: 10))
                             }
                             .buttonStyle(.plain)
-                            .padding(10)
-                            .background(seafoam.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
                         }
                         Button { client.scan() } label: {
                             Label(client.scanning ? "Scanning…" : "Find RaceBox", systemImage: "magnifyingglass")
@@ -234,7 +246,7 @@ struct DashboardView: View {
     private var telemetry: some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Text("A little signal check").font(.title3.bold())
+                Text("Data preview").font(.title3.bold())
                 Spacer()
                 Label(client.telemetry?.hasFix == true ? "3D FIX" : "WAITING FOR FIX",
                       systemImage: client.telemetry?.hasFix == true ? "checkmark.circle.fill" : "antenna.radiowaves.left.and.right")
@@ -300,9 +312,6 @@ struct DashboardView: View {
                 infoRow("UTC valid", client.telemetry.map { $0.utcValid == true ? "Yes" : "No" } ?? "—", "")
                 infoRow("Time accuracy", client.telemetry?.utcValid == true
                         ? client.telemetry?.timeAccuracyNs.map { $0.formatted() } ?? "—" : "—", "ns")
-                Divider()
-                Text("Satellites used, not satellites visible. The standard RaceBox packet does not expose per-satellite identities or signal strength.")
-                    .font(.caption2).foregroundStyle(.secondary)
             }
             VStack(spacing: 18) {
                 Card {
